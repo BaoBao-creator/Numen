@@ -1,4 +1,5 @@
 plugins {
+	id 'java'
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 }
@@ -33,14 +34,14 @@ loom {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// Cardinal Components API powers persistent per-player currency storage and automatic sync.
-	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
-	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+	implementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+	implementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
 	include "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
 	include "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
 }
