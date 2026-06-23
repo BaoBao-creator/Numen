@@ -3,7 +3,6 @@
 	"package": "b40.numen.client.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"ExampleClientMixin",
 		"InventoryScreenMixin"
 	],
 	"injectors": {
