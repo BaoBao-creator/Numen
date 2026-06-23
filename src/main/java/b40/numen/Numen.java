@@ -1,32 +1,31 @@
 package b40.numen;
 
+import b40.numen.currency.CurrencyCommands;
+import b40.numen.currency.CurrencyComponents;
+import b40.numen.currency.PlayerCurrencyComponent;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.resources.Identifier;
 
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import b40.numen.currency.CurrencyCommands;
-import b40.numen.currency.CurrencySync;
-
-public class Numen implements ModInitializer {
+public class Numen implements ModInitializer, EntityComponentInitializer {
 	public static final String MOD_ID = "numen";
-
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-
-		CurrencySync.register();
 		CurrencyCommands.register();
 		LOGGER.info("Numen currency systems loaded.");
+	}
+
+	@Override
+	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
+		registry.registerForPlayers(CurrencyComponents.WALLET, PlayerCurrencyComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
 	}
 
 	public static Identifier id(String path) {
