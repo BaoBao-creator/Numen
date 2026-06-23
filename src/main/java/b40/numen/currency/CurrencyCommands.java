@@ -41,10 +41,9 @@ public final class CurrencyCommands {
 		dispatcher.register(literal("pay")
 			.then(argument("player", EntityArgument.player())
 				.then(argument("amount", IntegerArgumentType.integer(1))
+					.executes(ctx -> pay(ctx.getSource().getPlayerOrException(), EntityArgument.getPlayer(ctx, "player"), Currency.COIN, IntegerArgumentType.getInteger(ctx, "amount")))
 					.then(literal("coin").executes(ctx -> pay(ctx.getSource().getPlayerOrException(), EntityArgument.getPlayer(ctx, "player"), Currency.COIN, IntegerArgumentType.getInteger(ctx, "amount"))))
-					.then(literal("c").executes(ctx -> pay(ctx.getSource().getPlayerOrException(), EntityArgument.getPlayer(ctx, "player"), Currency.COIN, IntegerArgumentType.getInteger(ctx, "amount"))))
-					.then(literal("nexus").executes(ctx -> pay(ctx.getSource().getPlayerOrException(), EntityArgument.getPlayer(ctx, "player"), Currency.NEXUS, IntegerArgumentType.getInteger(ctx, "amount"))))
-					.then(literal("n").executes(ctx -> pay(ctx.getSource().getPlayerOrException(), EntityArgument.getPlayer(ctx, "player"), Currency.NEXUS, IntegerArgumentType.getInteger(ctx, "amount")))))));
+					.then(literal("c").executes(ctx -> pay(ctx.getSource().getPlayerOrException(), EntityArgument.getPlayer(ctx, "player"), Currency.COIN, IntegerArgumentType.getInteger(ctx, "amount")))))));
 	}
 
 	private static int add(CommandSourceStack source, ServerPlayer player, Currency currency, int amount) {

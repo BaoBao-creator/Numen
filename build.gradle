@@ -21,6 +21,7 @@ repositories {
 }
 
 loom {
+	enableTransitiveAccessWideners = false
 	splitEnvironmentSourceSets()
 
 	mods {
