@@ -32,9 +32,18 @@ public final class CurrencyCommands {
 
 	private static void registerAdmin(CommandDispatcher<CommandSourceStack> dispatcher, Currency currency, String name) {
 		dispatcher.register(literal(name).requires(source -> source.hasPermission(2))
-			.then(literal("add").then(argument("player", EntityArgument.player()).then(argument("amount", IntegerArgumentType.integer(1)).executes(ctx -> add(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), currency, IntegerArgumentType.getInteger(ctx, "amount")))))
-			.then(literal("set").then(argument("player", EntityArgument.player()).then(argument("amount", IntegerArgumentType.integer(1)).executes(ctx -> set(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), currency, IntegerArgumentType.getInteger(ctx, "amount")))))
-			.then(literal("take").then(argument("player", EntityArgument.player()).then(argument("amount", IntegerArgumentType.integer(1)).executes(ctx -> take(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), currency, IntegerArgumentType.getInteger(ctx, "amount"))))));
+			.then(literal("add")
+				.then(argument("player", EntityArgument.player())
+					.then(argument("amount", IntegerArgumentType.integer(1))
+						.executes(ctx -> add(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), currency, IntegerArgumentType.getInteger(ctx, "amount"))))))
+			.then(literal("set")
+				.then(argument("player", EntityArgument.player())
+					.then(argument("amount", IntegerArgumentType.integer(1))
+						.executes(ctx -> set(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), currency, IntegerArgumentType.getInteger(ctx, "amount"))))))
+			.then(literal("take")
+				.then(argument("player", EntityArgument.player())
+					.then(argument("amount", IntegerArgumentType.integer(1))
+						.executes(ctx -> take(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), currency, IntegerArgumentType.getInteger(ctx, "amount")))))));
 	}
 
 	private static void registerPay(CommandDispatcher<CommandSourceStack> dispatcher) {
