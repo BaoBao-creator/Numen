@@ -7,6 +7,11 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://maven.ladysnake.org/releases'
+	}
+
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -28,10 +33,16 @@ loom {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// Cardinal Components API powers persistent per-player currency storage and automatic sync.
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+	include "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+	include "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
 }
 
 processResources {

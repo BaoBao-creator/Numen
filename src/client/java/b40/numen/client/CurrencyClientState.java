@@ -1,11 +1,23 @@
 package b40.numen.client;
 
-public final class CurrencyClientState {
-	private static long coin;
-	private static long nexus;
+import b40.numen.currency.Currency;
+import b40.numen.currency.CurrencyComponents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
 
+public final class CurrencyClientState {
 	private CurrencyClientState() {}
-	public static long coin() { return coin; }
-	public static long nexus() { return nexus; }
-	public static void set(long coin, long nexus) { CurrencyClientState.coin = coin; CurrencyClientState.nexus = nexus; }
+
+	public static int coin() {
+		return get(Currency.COIN);
+	}
+
+	public static int nexus() {
+		return get(Currency.NEXUS);
+	}
+
+	private static int get(Currency currency) {
+		Player player = Minecraft.getInstance().player;
+		return player == null ? 0 : CurrencyComponents.get(player).get(currency);
+	}
 }
