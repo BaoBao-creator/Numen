@@ -7,6 +7,9 @@ import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import b40.numen.currency.CurrencyCommands;
+import b40.numen.currency.CurrencySync;
+
 public class Numen implements ModInitializer {
 	public static final String MOD_ID = "numen";
 
@@ -21,7 +24,9 @@ public class Numen implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		LOGGER.info("Hello Fabric world!");
+		CurrencySync.register();
+		CurrencyCommands.register();
+		LOGGER.info("Numen currency systems loaded.");
 	}
 
 	public static Identifier id(String path) {
