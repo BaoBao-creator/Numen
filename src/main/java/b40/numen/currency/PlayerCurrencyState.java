@@ -13,6 +13,7 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 
 public class PlayerCurrencyState extends SavedData {
 	private static final String DATA_NAME = "numen_currencies";
+	private static final long MAX_BALANCE = Long.MAX_VALUE;
 	private static final SavedDataType<PlayerCurrencyState> TYPE = new SavedDataType<>(DATA_NAME, PlayerCurrencyState::new, PlayerCurrencyState::load, null);
 	private final Map<UUID, Account> accounts = new HashMap<>();
 
@@ -24,27 +25,56 @@ public class PlayerCurrencyState extends SavedData {
 		return account(player.getUUID()).get(currency);
 	}
 
-	public void set(ServerPlayer player, Currency currency, long amount) {
-		account(player.getUUID()).set(currency, Math.max(0, amount));
+	public long set(ServerPlayer player, Currency currency, long amount) {
+		long sanitized = sanitize(amount);
+		account(player.getUUID()).set(currency, sanitized);
 		setDirty();
 		CurrencySync.send(player);
+		return sanitized;
 	}
 
 	public boolean take(ServerPlayer player, Currency currency, long amount) {
+		if (amount <= 0) return false;
 		Account account = account(player.getUUID());
-		if (account.get(currency) < amount) return false;
-		account.set(currency, account.get(currency) - amount);
+		long current = account.get(currency);
+		if (current < amount) return false;
+		account.set(currency, current - amount);
 		setDirty();
 		CurrencySync.send(player);
 		return true;
 	}
 
-	public void add(ServerPlayer player, Currency currency, long amount) {
-		set(player, currency, get(player, currency) + amount);
+	public long add(ServerPlayer player, Currency currency, long amount) {
+		if (amount <= 0) return get(player, currency);
+		Account account = account(player.getUUID());
+		long updated = saturatedAdd(account.get(currency), amount);
+		account.set(currency, updated);
+		setDirty();
+		CurrencySync.send(player);
+		return updated;
+	}
+
+	public long remove(ServerPlayer player, Currency currency, long amount) {
+		if (amount <= 0) return get(player, currency);
+		Account account = account(player.getUUID());
+		long updated = Math.max(0, account.get(currency) - amount);
+		account.set(currency, updated);
+		setDirty();
+		CurrencySync.send(player);
+		return updated;
 	}
 
 	private Account account(UUID uuid) {
 		return accounts.computeIfAbsent(uuid, ignored -> new Account());
+	}
+
+	private static long sanitize(long amount) {
+		return Math.max(0, Math.min(MAX_BALANCE, amount));
+	}
+
+	private static long saturatedAdd(long current, long amount) {
+		if (MAX_BALANCE - current < amount) return MAX_BALANCE;
+		return current + amount;
 	}
 
 	@Override
@@ -67,8 +97,8 @@ public class PlayerCurrencyState extends SavedData {
 			try {
 				CompoundTag playerTag = players.getCompound(key).orElse(new CompoundTag());
 				Account account = new Account();
-				account.coin = Math.max(0, playerTag.getLong("coin").orElse(0L));
-				account.nexus = Math.max(0, playerTag.getLong("nexus").orElse(0L));
+				account.coin = sanitize(playerTag.getLong("coin").orElse(0L));
+				account.nexus = sanitize(playerTag.getLong("nexus").orElse(0L));
 				state.accounts.put(UUID.fromString(key), account);
 			} catch (IllegalArgumentException ignored) {
 			}
